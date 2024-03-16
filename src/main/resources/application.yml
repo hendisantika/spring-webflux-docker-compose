@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: spring-webflux-docker-compose
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
+  docker:
+    compose:
+      lifecycle-management: start_only
