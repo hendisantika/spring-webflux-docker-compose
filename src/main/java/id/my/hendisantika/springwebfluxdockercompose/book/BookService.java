@@ -3,6 +3,9 @@ package id.my.hendisantika.springwebfluxdockercompose.book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,4 +22,14 @@ import org.springframework.stereotype.Service;
 public class BookService {
     private final BookRepository bookRepository;
     private final ReactiveRedisTemplate<String, Book> reactiveRedisTemplate;
+
+    public Mono<Book> findById(Long id) {
+        String key = "book:" + id;
+        return reactiveRedisTemplate.opsForValue().get(key)
+                .switchIfEmpty(bookRepository.findById(id)
+                        .flatMap(book -> reactiveRedisTemplate.opsForValue()
+                                .set(key, book, Duration.ofMinutes(5))
+                                .thenReturn(book))
+                );
+    }
 }
