@@ -44,4 +44,10 @@ public class BookService {
                                 .flatMap(key -> reactiveRedisTemplate.opsForValue().get(key)))
                 );
     }
+
+    public Mono<Book> save(Book book) {
+        return bookRepository.save(book)
+                .flatMap(savedBook -> reactiveRedisTemplate.opsForValue()
+                        .set("book:" + savedBook.id(), savedBook, Duration.ofMinutes(5)).thenReturn(savedBook));
+    }
 }
