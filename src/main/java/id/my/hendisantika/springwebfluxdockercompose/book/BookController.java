@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -22,5 +23,10 @@ public record BookController(BookService bookService) {
     @GetMapping("/{id}")
     public Mono<Book> findById(@PathVariable Long id) {
         return bookService.findById(id);
+    }
+
+    @GetMapping
+    public Flux<Book> findAll() {
+        return bookService.findAll();
     }
 }
