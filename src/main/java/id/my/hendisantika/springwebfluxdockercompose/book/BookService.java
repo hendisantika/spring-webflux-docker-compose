@@ -22,7 +22,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
-    private final ReactiveRedisTemplate<String, Book> reactiveRedisTemplate;
+    private ReactiveRedisTemplate<String, Book> reactiveRedisTemplate;
 
     public Mono<Book> findById(Long id) {
         String key = "book:" + id;
