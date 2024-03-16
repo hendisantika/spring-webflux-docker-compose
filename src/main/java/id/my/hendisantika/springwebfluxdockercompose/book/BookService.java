@@ -50,4 +50,9 @@ public class BookService {
                 .flatMap(savedBook -> reactiveRedisTemplate.opsForValue()
                         .set("book:" + savedBook.id(), savedBook, Duration.ofMinutes(5)).thenReturn(savedBook));
     }
+
+    public Mono<Boolean> deleteById(Long id) {
+        return bookRepository.deleteById(id)
+                .then(reactiveRedisTemplate.opsForValue().delete("book:" + id));
+    }
 }
